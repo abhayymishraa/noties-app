@@ -3,25 +3,24 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 import prisma from "@/app/lib/db";
 
-
 export async function POST(req: Request) {
   const body = await req.text();
-  console.log(body)
-  const endpointSecret = process.env.STRIPE_SECRET_WEBHOOK_KEY!;
-  const sig = headers().get("stripe-signature") as string;
-  let event: Stripe.Event;
-  try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
-  } catch (err) {
-    return new Response(`Webhook Error: ${err}`, {
-      status: 400,
-    })}
 
-  
+  const signature = headers().get("Stripe-Signature") as string;
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
+  } catch (error: unknown) {
+    return new Response("webhook error", { status: 400 });
+  }
 
   const session = event.data.object as Stripe.Checkout.Session;
-
-  
 
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(
