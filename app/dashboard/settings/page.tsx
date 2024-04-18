@@ -54,7 +54,7 @@ export default async function SettingsPAge() {
         colorScheme: colorScheme,
       },
     });
-
+  
     revalidatePath("/", "layout");
   }
 
