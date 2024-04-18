@@ -1,6 +1,5 @@
 import { SubmitButton } from "@/app/components/Submitbuttons";
 import prisma from "@/app/lib/db";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,50 +18,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 
-async function getData({userId}:{userId:string}) {
-
+async function getData({ userId }: { userId: string }) {
   const data = await prisma.user.findUnique({
-    where:{
-      id: userId
+    where: {
+      id: userId,
     },
-    select :{
+    select: {
       name: true,
       email: true,
-      colorScheme:true
-    }
-  })
-  return data
+      colorScheme: true,
+    },
+  });
+  return data;
 }
 
 export default async function SettingsPAge() {
-
-  const authInfo = auth()
+  const authInfo = auth();
 
   const userData = await getData({ userId: authInfo?.userId as string });
 
-  
-   async function postData(formData:FormData) {
-    "use server"
+  async function postData(formData: FormData) {
+    "use server";
 
     const name = formData.get("name") as string;
     const colorScheme = formData.get("color") as string;
-     const data  = await prisma.user.update({
-      where :{
-        id: authInfo?.userId as string
+    const data = await prisma.user.update({
+      where: {
+        id: authInfo?.userId as string,
       },
-      data:{
-          name: name,
-          colorScheme: colorScheme
-     }})
+      data: {
+        name: name,
+        colorScheme: colorScheme,
+      },
+    });
 
-     revalidatePath('/','layout')
-   }
-
-   
-
+    revalidatePath("/", "layout");
+  }
 
   return (
     <div className="grid items-start gap-8">
@@ -98,8 +92,7 @@ export default async function SettingsPAge() {
                 <Input
                   name="email"
                   type="email"
-                  id="email
-                     "
+                  id="email"
                   placeholder="Your Email"
                   disabled
                   defaultValue={userData?.email ?? undefined}
@@ -123,13 +116,12 @@ export default async function SettingsPAge() {
                       <SelectItem value="theme-rose">Rose</SelectItem>
                     </SelectGroup>
                   </SelectContent>
-      
                 </Select>
               </div>
             </div>
           </CardContent>
           <CardFooter>
-           <SubmitButton />
+            <SubmitButton />
           </CardFooter>
         </form>
       </Card>
