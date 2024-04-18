@@ -8,6 +8,7 @@ import { stripe } from "@/app/lib/stripe";
 
 
 async function getdata({id , email}:{id:string ,email:string}) {
+    try{
     const user = await prisma.user.findFirst({
         where:{
             id: id
@@ -42,6 +43,9 @@ async function getdata({id , email}:{id:string ,email:string}) {
             }
         })
     }
+} catch(error){
+    console.log(error)
+}
 
 }
 
