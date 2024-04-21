@@ -39,7 +39,7 @@ async function getData(userId: string) {
 }
 
 export default async function DashboardPage() {
-  const { userId } = auth()
+  const { userId } = auth();
   const data = await getData(userId as string);
 
   async function deleteNote(formData: FormData) {
@@ -64,9 +64,9 @@ export default async function DashboardPage() {
             Here you can see and create new notes
           </p>
         </div>
-          <Button asChild>
-            <Link href="/dashboard/new">Create a new Note</Link>
-          </Button>
+        <Button asChild>
+          <Link href="/dashboard/new">Create a new Note</Link>
+        </Button>
       </div>
 
       {data?.Notes.length == 0 ? (
@@ -82,9 +82,9 @@ export default async function DashboardPage() {
             You currently dont have any notes. please create some so that you
             can see them right here.
           </p>
-            <Button asChild>
-              <Link href="/dashboard/billing">Create a new Note</Link>
-            </Button>
+          <Button asChild>
+            <Link href="/dashboard/new">Create a new Note</Link>
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col gap-y-4">
